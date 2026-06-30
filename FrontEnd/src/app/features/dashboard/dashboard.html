@@ -22,38 +22,27 @@
             <i class="bi bi-search me-2"></i>Buscar veículo por modelo
           </h2>
 
-          <input
-            type="text"
-            class="form-control search-input"
-            placeholder="Ex: Mustang, Ranger, Territory..."
-            name="modelSearch"
-            [(ngModel)]="modelSearchTerm"
-            (ngModelChange)="onModelSearchChange($event)"
-          >
+          <input type="text" class="form-control search-input" placeholder="Ex: Mustang, Ranger, Territory..."
+            name="modelSearch" [(ngModel)]="modelSearchTerm" (ngModelChange)="onModelSearchChange($event)">
 
           <div class="vehicle-options mt-3" *ngIf="filteredVehicles.length">
-            <button
-              *ngFor="let vehicle of filteredVehicles"
-              type="button"
-              class="vehicle-chip"
-              [class.vehicle-chip--active]="selectedVehicle?.id === vehicle.id"
-              (click)="selectVehicle(vehicle)"
-            >
-              {{ vehicle.model }}
+            <button *ngFor="let vehicle of filteredVehicles" type="button" class="vehicle-chip"
+              [class.vehicle-chip--active]="selectedVehicle?.id === vehicle.id" (click)="selectVehicle(vehicle)">
+              {{ vehicle.vehicle }}
             </button>
           </div>
 
           <p class="text-muted small mt-3 mb-0" *ngIf="!loadingVehicles && !filteredVehicles.length">
             Nenhum veículo encontrado para "{{ modelSearchTerm }}".
+            <br>
+            <span class="text-danger" *ngIf="!filteredVehicles.length">
+              Verifique se a API está rodando em http://localhost:3001.
+            </span>
           </p>
 
           <div class="vehicle-image-wrapper mt-4" *ngIf="selectedVehicle">
-            <img
-              [src]="selectedVehicle.image"
-              [alt]="selectedVehicle.model"
-              class="vehicle-image animate-fade-in"
-            >
-            <p class="vehicle-image__caption">{{ selectedVehicle.brand }} {{ selectedVehicle.model }}</p>
+            <img [src]="selectedVehicle.img" [alt]="selectedVehicle.vehicle" class="vehicle-image animate-fade-in">
+            <p class="vehicle-image__caption">Ford {{ selectedVehicle.vehicle }}</p>
           </div>
 
           <div class="text-center py-5" *ngIf="loadingVehicles">
@@ -70,7 +59,8 @@
               <i class="bi bi-graph-up-arrow metric-card__icon"></i>
               <p class="metric-card__label">Total de vendas</p>
               <h3 class="metric-card__value">
-                {{ selectedVehicle ? (selectedVehicle.totalSales | number) : '—' }}
+                {{ selectedVehicle ? (selectedVehicle.volumetotal | number) : '—' }}
+                <small class="metric-card__unit" *ngIf="selectedVehicle">unid</small>
               </h3>
             </div>
           </div>
@@ -78,9 +68,10 @@
           <div class="col-md-4">
             <div class="metric-card metric-card--accent animate-fade-in">
               <i class="bi bi-broadcast metric-card__icon"></i>
-              <p class="metric-card__label">Veículos conectados</p>
+              <p class="metric-card__label">Conectados</p>
               <h3 class="metric-card__value">
-                {{ selectedVehicle ? (selectedVehicle.connectedVehicles | number) : '—' }}
+                {{ selectedVehicle ? (selectedVehicle.connected | number) : '—' }}
+                <small class="metric-card__unit" *ngIf="selectedVehicle">unid</small>
               </h3>
             </div>
           </div>
@@ -88,9 +79,10 @@
           <div class="col-md-4">
             <div class="metric-card metric-card--success animate-fade-in">
               <i class="bi bi-cloud-check-fill metric-card__icon"></i>
-              <p class="metric-card__label">Software atualizado</p>
+              <p class="metric-card__label">Update Software</p>
               <h3 class="metric-card__value">
-                {{ selectedVehicle ? (selectedVehicle.softwareUpdated + '%') : '—' }}
+                {{ selectedVehicle ? (selectedVehicle.softwareUpdates | number) : '—' }}
+                <small class="metric-card__unit" *ngIf="selectedVehicle">unid</small>
               </h3>
             </div>
           </div>
@@ -100,39 +92,36 @@
             <div class="panel-card animate-fade-in">
               <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <h2 class="panel-card__title mb-0">
-                  <i class="bi bi-table me-2"></i>Veículos por código
+                  <i class="bi bi-table me-2"></i>Buscar veículo por código (VIN)
                 </h2>
 
-                <input
-                  type="text"
-                  class="form-control search-input search-input--inline"
-                  placeholder="Buscar por código (ex: 2FRHDUYS2Y63NHD22454)"
-                  name="codeSearch"
-                  [(ngModel)]="codeSearchTerm"
-                  (ngModelChange)="onCodeSearchChange($event)"
-                >
+                <input type="text" class="form-control search-input search-input--inline"
+                  placeholder="Ex: 2FRHDUYS2Y63NHD22454" name="codeSearch" [(ngModel)]="codeSearchTerm"
+                  (ngModelChange)="onCodeSearchChange($event)">
               </div>
 
               <div class="table-responsive">
                 <table class="table table-hover align-middle dashboard-table">
                   <thead>
                     <tr>
-                      <th>Código</th>
-                      <th>Modelo</th>
+                      <th>Código - Vin</th>
+                      <th>Odômetro</th>
+                      <th>Nível de Combustível</th>
                       <th>Status</th>
-                      <th>Última atualização</th>
-                      <th>Localização</th>
+                      <th>Lat.</th>
+                      <th>Long.</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let row of vehicleDataRows">
-                      <td class="text-muted">{{ row.code }}</td>
-                      <td class="fw-semibold">{{ row.model }}</td>
+                    <tr *ngIf="vehicleDataRow" class="animate-fade-in">
+                      <td class="text-muted">{{ vehicleDataRow.vin }}</td>
+                      <td>{{ vehicleDataRow.odometro | number }} Km</td>
+                      <td>{{ vehicleDataRow.nivelCombustivel }}%</td>
                       <td>
-                        <span [class]="statusBadgeClass(row.status)">{{ row.status }}</span>
+                        <span [class]="statusBadgeClass(vehicleDataRow.status)">{{ vehicleDataRow.status }}</span>
                       </td>
-                      <td>{{ row.lastUpdate }}</td>
-                      <td>{{ row.location }}</td>
+                      <td>{{ vehicleDataRow.lat }}</td>
+                      <td>{{ vehicleDataRow.long }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -141,8 +130,13 @@
                   <div class="spinner-border text-primary" role="status"></div>
                 </div>
 
-                <p class="text-muted small text-center py-3 mb-0" *ngIf="!loadingTable && !vehicleDataRows.length">
-                  Nenhum registro encontrado para "{{ codeSearchTerm }}".
+                <p class="text-muted small text-center py-3 mb-0"
+                  *ngIf="!loadingTable && !vehicleDataRow && !tableError">
+                  Digite um código VIN completo para buscar (ex: 2FRHDUYS2Y63NHD22454).
+                </p>
+
+                <p class="text-danger small text-center py-3 mb-0" *ngIf="!loadingTable && tableError">
+                  {{ tableError }}
                 </p>
               </div>
             </div>

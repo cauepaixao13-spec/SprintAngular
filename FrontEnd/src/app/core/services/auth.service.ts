@@ -1,59 +1,54 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { catchError, map, of, tap } from 'rxjs';
-import { LoginCredentials, User } from '../models/user.model';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
+import { ApiErrorResponse, LoginApiPayload, LoginApiResponse, LoginCredentials } from '../models/user.model';
 
 const STORAGE_KEY = 'ford_dashboard_auth';
+
+export interface LoginResult {
+  success: boolean;
+  message: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly apiUrl = 'http://localhost:3000/users';
+  // API real do desafio: https://github.com/JMarcelloDias/Api-Sprint7
+  private readonly apiUrl = 'http://localhost:3001/login';
 
-  // Credenciais fixas exigidas pela regra de negócio do desafio.
-  private readonly VALID_USERNAME = 'admin';
-  private readonly VALID_PASSWORD = '123456';
-
-  // BehaviorSubject mantém o estado de autenticação reativo em toda a aplicação.
   private readonly loggedInSubject = new BehaviorSubject<boolean>(this.hasSession());
   readonly isLoggedIn$ = this.loggedInSubject.asObservable();
 
-  private currentUser: Pick<User, 'username' | 'name'> | null = this.getStoredUser();
+  private currentUser: LoginApiResponse | null = this.getStoredUser();
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Realiza a tentativa de login.
-   * Regra do desafio: a validação consulta o back-end (GET /users) para simular
-   * uma busca real de credenciais, mas o acesso só é liberado quando o usuário
-   * e a senha digitados forem exatamente admin / 123456.
+   * Autentica o usuário consultando POST /login.
+   * A API valida nome/senha no back-end (admin / 123456) e retorna:
+   *  - 200 com { id, nome, email } em caso de sucesso
+   *  - 400/401 com { message } em caso de falha
    *
-   * Operadores RxJS usados: map, tap, catchError.
+   * Operadores RxJS usados: map, catchError.
    */
-  login(credentials: LoginCredentials): Observable<boolean> {
-    const isHardcodedValid =
-      credentials.username === this.VALID_USERNAME &&
-      credentials.password === this.VALID_PASSWORD;
+  login(credentials: LoginCredentials): Observable<LoginResult> {
+    const payload: LoginApiPayload = {
+      nome: credentials.username,
+      senha: credentials.password
+    };
 
-    return this.http.get<User[]>(this.apiUrl).pipe(
-      map((users) => {
-        // Mesmo consultando o back-end, a regra de negócio exige que o acesso
-        // só seja concedido com as credenciais fixas do desafio.
-        const backendUserExists = users?.some(
-          (u) => u.username === credentials.username
-        );
-        return isHardcodedValid && (backendUserExists || users?.length === 0 || !!users);
+    return this.http.post<LoginApiResponse>(this.apiUrl, payload).pipe(
+      map((user) => {
+        this.setSession(user);
+        return { success: true, message: 'Login realizado com sucesso.' };
       }),
-      // Caso o back-end esteja fora do ar, ainda permitimos o acesso fixo,
-      // para que o front-end não fique bloqueado por uma falha de integração.
-      catchError(() => of(isHardcodedValid)),
-      tap((success) => {
-        if (success) {
-          this.setSession(credentials.username);
-        }
+      catchError((error: HttpErrorResponse) => {
+        const apiMessage = (error.error as ApiErrorResponse)?.message;
+        const message = apiMessage
+          ?? 'Não foi possível conectar à API em http://localhost:3001. Verifique se ela está rodando.';
+        return of({ success: false, message });
       })
     );
   }
@@ -68,12 +63,11 @@ export class AuthService {
     return this.loggedInSubject.value;
   }
 
-  getCurrentUser(): Pick<User, 'username' | 'name'> | null {
+  getCurrentUser(): LoginApiResponse | null {
     return this.currentUser;
   }
 
-  private setSession(username: string): void {
-    const user = { username, name: 'Administrador' };
+  private setSession(user: LoginApiResponse): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
     this.currentUser = user;
     this.loggedInSubject.next(true);
@@ -83,7 +77,7 @@ export class AuthService {
     return !!localStorage.getItem(STORAGE_KEY);
   }
 
-  private getStoredUser(): Pick<User, 'username' | 'name'> | null {
+  private getStoredUser(): LoginApiResponse | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   }

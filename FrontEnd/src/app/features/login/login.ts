@@ -37,17 +37,13 @@ export class Login {
     this.errorMessage = '';
 
     this.authService.login(this.credentials).subscribe({
-      next: (success) => {
+      next: (result) => {
         this.loading = false;
-        if (success) {
+        if (result.success) {
           this.router.navigate(['/home']);
         } else {
-          this.errorMessage = 'Usuário ou senha inválidos.';
+          this.errorMessage = result.message;
         }
-      },
-      error: () => {
-        this.loading = false;
-        this.errorMessage = 'Não foi possível validar o login. Tente novamente.';
       }
     });
   }

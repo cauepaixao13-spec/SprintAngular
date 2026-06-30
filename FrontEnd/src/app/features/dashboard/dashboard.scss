@@ -145,6 +145,13 @@
     color: v.$ford-dark;
     margin: 0;
   }
+
+  &__unit {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #adb5bd;
+    margin-left: 0.25rem;
+  }
 }
 
 .dashboard-table {

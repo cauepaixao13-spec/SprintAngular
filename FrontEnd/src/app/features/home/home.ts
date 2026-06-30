@@ -18,7 +18,7 @@ export class Home {
     private authService: AuthService,
     private router: Router
   ) {
-    this.userName = this.authService.getCurrentUser()?.name ?? 'Administrador';
+    this.userName = this.authService.getCurrentUser()?.nome ?? 'Administrador';
   }
 
   goToDashboard(): void {
