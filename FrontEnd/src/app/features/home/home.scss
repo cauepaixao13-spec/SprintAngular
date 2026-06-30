@@ -1,0 +1,120 @@
+@use '../../../styles/variables' as v;
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: v.$ford-dark;
+}
+
+.home-navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 14, 23, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  &__logo {
+    height: 26px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+}
+
+.logout-btn {
+  border-radius: 2rem;
+  transition: v.$transition-base;
+
+  &:hover {
+    background: #fff;
+    color: v.$ford-dark;
+    transform: translateY(-1px);
+  }
+}
+
+.home-hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background:
+    linear-gradient(120deg, rgba(0, 30, 70, 0.85), rgba(0, 8, 20, 0.92)),
+    url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
+  overflow: hidden;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 102, 204, 0.25), transparent 50%);
+  }
+}
+
+.welcome-card {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  border-radius: v.$radius-lg;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  color: #fff;
+  box-shadow: v.$shadow-strong;
+
+  &__eyebrow {
+    color: v.$ford-accent;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.25;
+  }
+
+  &__text {
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+}
+
+.btn-dashboard-link {
+  background: linear-gradient(90deg, v.$ford-blue-light, v.$ford-accent);
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.85rem 2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: v.$transition-base;
+  box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 35px rgba(0, 170, 255, 0.45);
+    color: #fff;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

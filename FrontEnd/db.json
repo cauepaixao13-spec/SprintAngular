@@ -1,0 +1,85 @@
+{
+  "users": [
+    { "id": 1, "username": "admin", "password": "123456", "name": "Administrador", "role": "admin" }
+  ],
+  "vehicle": [
+    {
+      "id": 1,
+      "model": "Mustang",
+      "brand": "Ford",
+      "image": "img/mustang.png",
+      "totalSales": 18240,
+      "connectedVehicles": 12890,
+      "softwareUpdated": 92
+    },
+    {
+      "id": 2,
+      "model": "Ranger",
+      "brand": "Ford",
+      "image": "img/ranger.png",
+      "totalSales": 25430,
+      "connectedVehicles": 19870,
+      "softwareUpdated": 87
+    },
+    {
+      "id": 3,
+      "model": "Territory",
+      "brand": "Ford",
+      "image": "img/territory.png",
+      "totalSales": 14120,
+      "connectedVehicles": 9560,
+      "softwareUpdated": 95
+    },
+    {
+      "id": 4,
+      "model": "Bronco Sport",
+      "brand": "Ford",
+      "image": "img/broncoSport.png",
+      "totalSales": 9870,
+      "connectedVehicles": 7320,
+      "softwareUpdated": 78
+    }
+  ],
+  "vehicleData": [
+    {
+      "id": 1,
+      "code": "2FRHDUYS2Y63NHD22454",
+      "model": "Mustang",
+      "status": "Conectado",
+      "lastUpdate": "2026-06-28",
+      "location": "Fortaleza - CE"
+    },
+    {
+      "id": 2,
+      "code": "3FTHDRYP1Y64KHC11298",
+      "model": "Ranger",
+      "status": "Em manutenção",
+      "lastUpdate": "2026-06-25",
+      "location": "São Paulo - SP"
+    },
+    {
+      "id": 3,
+      "code": "1FATGFKS3Y52BHN98765",
+      "model": "Territory",
+      "status": "Offline",
+      "lastUpdate": "2026-06-20",
+      "location": "Belo Horizonte - MG"
+    },
+    {
+      "id": 4,
+      "code": "5FBRDUYZ7Y45MHD33012",
+      "model": "Bronco Sport",
+      "status": "Conectado",
+      "lastUpdate": "2026-06-29",
+      "location": "Curitiba - PR"
+    },
+    {
+      "id": 5,
+      "code": "2FRHDUYS2Y63NHD90001",
+      "model": "Mustang",
+      "status": "Conectado",
+      "lastUpdate": "2026-06-30",
+      "location": "Fortaleza - CE"
+    }
+  ]
+}

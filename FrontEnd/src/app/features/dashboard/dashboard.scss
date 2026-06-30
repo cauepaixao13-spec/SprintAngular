@@ -1,0 +1,198 @@
+@use '../../../styles/variables' as v;
+
+.dashboard-page {
+  min-height: 100vh;
+  background: v.$ford-light-gray;
+}
+
+.dashboard-navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: v.$ford-dark;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+
+  &__logo {
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+}
+
+.panel-card {
+  background: #fff;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-soft;
+  padding: 1.75rem;
+  transition: v.$transition-base;
+
+  &:hover {
+    box-shadow: v.$shadow-strong;
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: v.$ford-dark;
+    margin-bottom: 1rem;
+  }
+}
+
+.search-input {
+  border-radius: 0.65rem;
+  border: 1px solid #dee2e6;
+  padding: 0.65rem 0.9rem;
+  transition: v.$transition-base;
+
+  &:focus {
+    border-color: v.$ford-blue;
+    box-shadow: 0 0 0 0.2rem rgba(0, 51, 153, 0.12);
+  }
+
+  &--inline {
+    max-width: 340px;
+  }
+}
+
+.vehicle-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.vehicle-chip {
+  border: 1px solid #dee2e6;
+  background: #fff;
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: v.$ford-gray;
+  transition: v.$transition-base;
+
+  &:hover {
+    border-color: v.$ford-blue-light;
+    color: v.$ford-blue;
+    transform: translateY(-1px);
+  }
+
+  &--active {
+    background: v.$ford-blue;
+    border-color: v.$ford-blue;
+    color: #fff;
+  }
+}
+
+.vehicle-image-wrapper {
+  text-align: center;
+}
+
+.vehicle-image {
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 25px rgba(0, 0, 0, 0.18));
+
+  &__caption {
+    margin-top: 0.75rem;
+    font-weight: 600;
+    color: v.$ford-dark;
+  }
+}
+
+.metric-card {
+  background: #fff;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-soft;
+  padding: 1.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 4px solid v.$ford-blue;
+  transition: v.$transition-base;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: v.$shadow-strong;
+  }
+
+  &--accent { border-top-color: v.$ford-accent; }
+  &--success { border-top-color: v.$ford-success; }
+
+  &__icon {
+    font-size: 1.5rem;
+    color: v.$ford-blue;
+    margin-bottom: 0.5rem;
+  }
+
+  &__label {
+    color: #868e96;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.25rem;
+  }
+
+  &__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: v.$ford-dark;
+    margin: 0;
+  }
+}
+
+.dashboard-table {
+  thead th {
+    color: #868e96;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid #f1f3f5;
+  }
+
+  tbody tr {
+    transition: v.$transition-base;
+  }
+
+  tbody tr:hover {
+    background: rgba(0, 51, 153, 0.04);
+  }
+}
+
+.badge-status {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &--online {
+    background: rgba(31, 191, 108, 0.12);
+    color: v.$ford-success;
+  }
+
+  &--warning {
+    background: rgba(255, 176, 32, 0.15);
+    color: #b9790a;
+  }
+
+  &--offline {
+    background: rgba(108, 117, 125, 0.15);
+    color: #6c757d;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
