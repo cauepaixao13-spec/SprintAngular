@@ -20,10 +20,13 @@
   top: 0;
   z-index: 10;
 
+  .navbar-brand {
+    color: #fff;
+  }
+
   &__logo {
     height: 26px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
   }
 }
 
@@ -46,14 +49,14 @@
   justify-content: center;
   padding: 2rem;
   background:
-    linear-gradient(120deg, rgba(0, 30, 70, 0.85), rgba(0, 8, 20, 0.92)),
-    url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;
+    linear-gradient(to bottom, rgba(0, 10, 30, 0.3) 0%, rgba(0, 0, 0, 0.1) 30%, rgba(0, 0, 0, 0.1) 70%, rgba(0, 10, 30, 0.45) 100%),
+    url('/img/Ford-background.jpg') center/cover no-repeat;
   overflow: hidden;
 
   &__overlay {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 30% 30%, rgba(0, 102, 204, 0.25), transparent 50%);
+    pointer-events: none;
   }
 }
 

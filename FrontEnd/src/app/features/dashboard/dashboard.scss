@@ -2,7 +2,7 @@
 
 .dashboard-page {
   min-height: 100vh;
-  background: v.$ford-light-gray;
+  background: #ffffff;
 }
 
 .dashboard-navbar {
@@ -17,10 +17,13 @@
   z-index: 20;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 
+  .navbar-brand {
+    color: #fff;
+  }
+
   &__logo {
     height: 24px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
   }
 }
 
