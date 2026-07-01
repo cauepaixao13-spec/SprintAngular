@@ -13,11 +13,12 @@ import {
 
 import { VehicleService } from '../../core/services/vehicle.service';
 import { Vehicle, VehicleDataRow } from '../../core/models/vehicle.model';
+import { Sidebar } from '../../core/components/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Sidebar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -48,12 +49,34 @@ export class Dashboard implements OnInit, OnDestroy {
     this.setupModelSearch();
     this.setupCodeSearch();
 
-    // Carrega o estado inicial da lista de veículos.
-    this.modelSearch$.next('');
+    // Carrega a lista de veículos imediatamente ao entrar no dashboard.
+    this.loadInitialVehicles();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  /**
+   * Carrega os veículos da API diretamente sem depender do Subject,
+   * garantindo que as imagens e dados apareçam assim que a página abre.
+   */
+  private loadInitialVehicles(): void {
+    this.loadingVehicles = true;
+    const sub = this.vehicleService.getVehicles().subscribe({
+      next: (vehicles) => {
+        this.filteredVehicles = vehicles;
+        this.loadingVehicles = false;
+        if (vehicles.length) {
+          this.selectVehicle(vehicles[0]);
+        }
+      },
+      error: () => {
+        this.loadingVehicles = false;
+        this.filteredVehicles = [];
+      }
+    });
+    this.subscriptions.add(sub);
   }
 
   /**
@@ -156,6 +179,30 @@ export class Dashboard implements OnInit, OnDestroy {
       this.tableError = '';
     }
     this.codeSearch$.next(term);
+  }
+
+  /** Disparado ao pressionar Enter no campo de busca VIN — busca imediata sem debounce. */
+  onCodeSearchEnter(): void {
+    const vin = this.codeSearchTerm.trim();
+    if (vin.length < 5) return;
+
+    this.loadingTable = true;
+    this.tableError = '';
+
+    this.vehicleService.searchVehicleByVin(vin).subscribe({
+      next: (data) => {
+        this.loadingTable = false;
+        this.vehicleDataRow = data ? { ...data, vin } : null;
+        if (!this.vehicleDataRow) {
+          this.tableError = 'Código VIN não encontrado.';
+        }
+      },
+      error: () => {
+        this.loadingTable = false;
+        this.vehicleDataRow = null;
+        this.tableError = 'Falha na comunicação com a API.';
+      }
+    });
   }
 
   /** Atualiza reativamente os cards e a imagem central. */

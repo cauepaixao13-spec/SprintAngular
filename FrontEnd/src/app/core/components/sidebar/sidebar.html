@@ -1,0 +1,40 @@
+<!-- Botão hambúrguer (sempre visível na navbar) -->
+<button type="button" class="hamburger-btn" (click)="toggle()" [attr.aria-expanded]="isOpen"
+  aria-label="Abrir menu de navegação">
+  <span class="hamburger-icon" [class.hamburger-icon--open]="isOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
+</button>
+
+<!-- Overlay escuro -->
+<div class="sidebar-overlay" [class.sidebar-overlay--visible]="isOpen" (click)="close()"></div>
+
+<!-- Painel lateral -->
+<aside class="sidebar" [class.sidebar--open]="isOpen">
+
+  <div class="sidebar__header">
+    <img src="/img/ford.png" alt="Ford" class="sidebar__logo">
+    <span class="sidebar__brand">Ford Dashboard</span>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a routerLink="/home" routerLinkActive="sidebar__link--active" class="sidebar__link" (click)="close()">
+      <i class="bi bi-house-door-fill"></i>
+      <span>Início</span>
+    </a>
+    <a routerLink="/dashboard" routerLinkActive="sidebar__link--active" class="sidebar__link" (click)="close()">
+      <i class="bi bi-speedometer2"></i>
+      <span>Dashboard</span>
+    </a>
+  </nav>
+
+  <div class="sidebar__footer">
+    <button type="button" class="sidebar__link sidebar__link--logout" (click)="logout()">
+      <i class="bi bi-box-arrow-right"></i>
+      <span>Sair</span>
+    </button>
+  </div>
+
+</aside>
